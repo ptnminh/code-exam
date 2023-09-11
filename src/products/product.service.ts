@@ -15,18 +15,29 @@ export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
   async createProduct(products) {
-    return Promise.all(
-      products.map(async (product) => {
-        return this.prismaService.products.create({
-          data: {
-            title: product.title.replaceAll('s/\x00//g', ''),
-            createdDate: product.created_at,
-            productType: product.product_type,
-            imageUrl: product.image?.src ?? '',
-          },
-        });
-      }),
-    );
+    const data = products.map((product) => {
+      return {
+        title: product.title,
+        createdDate: product.created_at,
+        productType: product.product_type,
+        imageUrl: product.image?.src ?? '',
+      };
+    });
+    return this.prismaService.products.createMany({
+      data,
+    });
+    // create upsert by prisma
+    // return this.prismaService.$transaction(
+    //   data.map((cur) =>
+    //     this.prismaService.products.upsert({
+    //       where: {
+    //         title: cur.title,
+    //       },
+    //       create: cur,
+    //       update: {},
+    //     }),
+    //   ),
+    // );
   }
 
   async getProducts(begin: string, end: string): Promise<any> {
