@@ -21,13 +21,10 @@ const getTheEndOfDay = (endDate: any) => {
 };
 
 const dateDiffInDays = (begin: string, end: string) => {
-  const a = new Date(begin);
-  const b = new Date(end);
-  const _MS_PER_DAY = 1000 * 60 * 60 * 24;
-  const utc1 = Date.UTC(a.getFullYear(), a.getMonth(), a.getDate());
-  const utc2 = Date.UTC(b.getFullYear(), b.getMonth(), b.getDate());
+  const a = moment(begin);
+  const b = moment(end);
 
-  return Math.floor((utc2 - utc1) / _MS_PER_DAY);
+  return b.diff(a, 'days');
 };
 
 const getTheBegginingOfDay1 = (startDate: any) => {
@@ -54,11 +51,4 @@ const getTheEndOfDay1 = (endDate: any) => {
     .tz('Asia/Ho_Chi_Minh')
     .format();
 };
-
-export {
-  getTheBegginingOfDay,
-  getTheEndOfDay,
-  getTheEndOfDay1,
-  dateDiffInDays,
-  getTheBegginingOfDay1,
-};
+console.log(getTheEndOfDay1('2023-08-07'));

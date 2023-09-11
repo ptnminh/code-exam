@@ -29,7 +29,7 @@ export class ProductService {
   }
 
   async getProducts(begin: string, end: string): Promise<any> {
-    const dateDiff = Array(dateDiffInDays(begin, end) + 2).fill(0);
+    const dateDiff = Array(dateDiffInDays(begin, end) + 1).fill(0);
     const beginDate = new Date(begin);
     let result: ProductResponse[] = [];
     let from = begin;
