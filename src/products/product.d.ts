@@ -11,3 +11,12 @@ export interface ProductResponse {
   numOfProducts: number;
   productIds: string[];
 }
+
+export interface variant {}
+
+export interface CreateProduct {
+  title: string;
+  body_html: string;
+  vendor: string;
+  product_type: string;
+}

@@ -1,5 +1,5 @@
 import { Transform } from 'class-transformer';
-import { IsNotEmpty } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
 import { getTheBegginingOfDay, getTheEndOfDay } from 'src/shared/utils';
 import {
   getTheBegginingOfDay1,
@@ -14,4 +14,10 @@ export class CreateProductDTO {
   @IsNotEmpty()
   @Transform(({ value }) => getTheEndOfDay1(value))
   end: string;
+}
+
+export class CrawlProductDTO {
+  @IsNotEmpty()
+  @IsString()
+  link: string;
 }

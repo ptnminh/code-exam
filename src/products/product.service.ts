@@ -35,6 +35,7 @@ export class ProductService {
     let from = begin;
     let to = getTheEndOfDay(begin);
     for (let _ of dateDiff) {
+      console.log(from, to);
       const products = await this.prismaService.products.findMany(
         queryBuilder({
           type: PRODUCTS.GET_PRODUCT_LIST,
