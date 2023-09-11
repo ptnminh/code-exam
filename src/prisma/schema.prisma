@@ -11,9 +11,9 @@ datasource db {
 }
 
 model products {
-  id          String @id @default(uuid())
+  id          String   @id @default(uuid())
   title       String
-  productType String @map(name: "product_type")
-  createdDate String @map(name: "created_date")
-  imageUrl    String @map(name: "image_url")
+  productType String   @default("") @map(name: "product_type")
+  createdDate DateTime @map(name: "created_date") @db.Timestamptz(3)
+  imageUrl    String?  @default("") @map(name: "image_url")
 }

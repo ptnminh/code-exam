@@ -1,3 +1,7 @@
-import { getTheBegginingOfDay, getTheEndOfDay } from './date-time';
+import {
+  getTheBegginingOfDay,
+  getTheEndOfDay,
+  dateDiffInDays,
+} from './date-time';
 
-export { getTheBegginingOfDay, getTheEndOfDay };
+export { getTheBegginingOfDay, getTheEndOfDay, dateDiffInDays };
