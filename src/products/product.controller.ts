@@ -1,0 +1,16 @@
+import { Controller, Get } from '@nestjs/common';
+import { ProductService } from './product.service';
+
+@Controller('products')
+export class ProductController {
+  constructor(private readonly productService: ProductService) {}
+
+  @Get()
+  async createProduct() {
+    try {
+      return this.productService.createProduct();
+    } catch (error) {
+      console.log(error);
+    }
+  }
+}
