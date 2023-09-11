@@ -1,8 +1,14 @@
-import { Controller, Body, Post } from '@nestjs/common';
+import {
+  Controller,
+  Body,
+  Post,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { ProductService } from './product.service';
 import { CrawlProductDTO, CreateProductDTO } from './dto/product.dto';
 import { HttpService } from '@nestjs/axios';
 import { ShopifyProductsResponse } from './product';
+import { formatData, getImageAndVariantIndex } from './query-builder';
 
 @Controller('products')
 export class ProductController {
@@ -28,19 +34,12 @@ export class ProductController {
         }
         since_id = data[data.length - 1].id;
       }
-      // return products.length;
+
       await this.productService.createProduct(products);
       return this.productService.getProducts(begin, end);
-
-      // const queryString = `/products.json?since_id=0&created_at_max=${end}&created_at_min=${begin}&limit=250&fields=id,title,created_at,product_type,image`;
-      // const result = await this.httpService.axiosRef.get(queryString);
-
-      // return {
-      //   length: result.data.products.length,
-      //   item: result.data.products[result.data.products.length - 1].id,
-      // };
     } catch (error) {
       console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 
@@ -52,28 +51,58 @@ export class ProductController {
       const response = request.data;
       const { product } = response;
       if (product) {
-        // const { title, body_html, vendor, product_type }: CreateProduct =
-        //   product;
-        const t = await this.httpService.axiosRef.post('/products.json', {
-          product: {
-            title: product.title,
-            body_html: product.body_html,
-            vendor: product.vendor,
-            product_type: product.product_type,
-            handle: product.handle,
-            tags: product.tags,
-            variants: product.variants.map(
-              ({ id, created_at, updated_at, quantity_rule, ...variant }) => ({
-                ...variant,
-              }),
-            ),
-          },
-        });
+        const { image: imagesResponse, variants: variantsResponse } = product;
 
-        return t.data;
+        const createProductRequest = await this.httpService.axiosRef.post(
+          '/products.json',
+          formatData(product),
+        );
+
+        const createProductResponse = createProductRequest.data;
+        const { product: productReponse } = createProductResponse;
+
+        // connect variant to image
+        // Lỗi
+        // if (productReponse) {
+        //   if (!!imagesResponse.variant_ids.length) {
+        //     imagesResponse.variant_ids.map((_, index) => {
+        //       let variantId: number = productReponse.variants[index].id;
+        //       console.log({
+        //         id: variantId,
+        //         image_id: imagesResponse.id,
+        //       });
+        //       return this.httpService.axiosRef.put(
+        //         `/variants/${variantId}.json`,
+        //         {
+        //           variant: {
+        //             id: variantId,
+        //             image_id: imagesResponse.id,
+        //           },
+        //         },
+        //       );
+        //     });
+        //   }
+        // }
+
+        // create product for return to user
+
+        const productToResponseToUser = await this.productService.createProduct(
+          [
+            {
+              title: product.title,
+              product_type: product.product_type,
+              created_at: product.created_at,
+              image: product.iamge,
+            },
+          ],
+        );
+        return {
+          product_id: productToResponseToUser[0].id,
+        };
       }
     } catch (error) {
       console.log(error);
+      throw new InternalServerErrorException();
     }
   }
 }

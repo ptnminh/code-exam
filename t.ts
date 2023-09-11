@@ -51,4 +51,4 @@ const getTheEndOfDay1 = (endDate: any) => {
     .tz('Asia/Ho_Chi_Minh')
     .format();
 };
-console.log(getTheEndOfDay1('2023-08-07'));
+console.log(dateDiffInDays('2023-08-01', '2023-08-07'));

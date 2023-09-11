@@ -7,6 +7,8 @@ import { ProductService } from './products/product.service';
 import { ConfigModule } from '@nestjs/config';
 import { ShopifyCoreModule } from '@nestjs-shopify/core';
 import { ApiVersion } from '@shopify/shopify-api';
+import { APP_INTERCEPTOR } from '@nestjs/core';
+import { ResponseInterceptor } from './interceptors/response.interceptor';
 
 @Module({
   imports: [
@@ -18,6 +20,12 @@ import { ApiVersion } from '@shopify/shopify-api';
     ProductModule,
   ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    {
+      provide: APP_INTERCEPTOR,
+      useClass: ResponseInterceptor,
+    },
+    AppService,
+  ],
 })
 export class AppModule {}

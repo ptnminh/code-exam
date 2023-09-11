@@ -13,6 +13,8 @@ import { ConfigService, ConfigModule } from '@nestjs/config';
         headers: {
           'Content-Type': 'application/json',
           'X-Shopify-Access-Token': process.env.APP_TOKEN,
+          'X-Shopify-Shop-Api-Call-Limit': 40 / 40,
+          'Retry-After': 2.0,
         },
       }),
       inject: [ConfigService],

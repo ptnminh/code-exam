@@ -8,14 +8,15 @@ import {
   getTheBegginingOfDay,
   getTheEndOfDay,
 } from 'src/shared/utils';
+import { getTheEndOfDay1 } from 'src/shared/utils/date-time';
 const moment = require('moment-timezone');
 @Injectable()
 export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createProduct(products: ShopifyProductsResponse[]) {
+  async createProduct(products) {
     return Promise.all(
-      products.map(async (product: ShopifyProductsResponse) => {
+      products.map(async (product) => {
         return this.prismaService.products.create({
           data: {
             title: product.title.replaceAll('s/\x00//g', ''),
@@ -29,13 +30,12 @@ export class ProductService {
   }
 
   async getProducts(begin: string, end: string): Promise<any> {
-    const dateDiff = Array(dateDiffInDays(begin, end) + 1).fill(0);
+    const dateDiff = Array(dateDiffInDays(begin, end) + 2).fill(0);
     const beginDate = new Date(begin);
     let result: ProductResponse[] = [];
     let from = begin;
     let to = getTheEndOfDay(begin);
     for (let _ of dateDiff) {
-      console.log(from, to);
       const products = await this.prismaService.products.findMany(
         queryBuilder({
           type: PRODUCTS.GET_PRODUCT_LIST,
