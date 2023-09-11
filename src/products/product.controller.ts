@@ -51,7 +51,7 @@ export class ProductController {
       const response = request.data;
       const { product } = response;
       if (product) {
-        const { image: imagesResponse, variants: variantsResponse } = product;
+        //const { image: imagesResponse, variants: variantsResponse } = product;
 
         const createProductRequest = await this.httpService.axiosRef.post(
           '/products.json',
