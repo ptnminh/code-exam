@@ -38,7 +38,7 @@ export class ProductService {
     });
   }
 
-  async getProducts(begin: string, end: string): Promise<any> {
+  async getProducts(begin: string, end: string): Promise<ProductResponse[]> {
     const dateDiff = Array(dateDiffInDays(begin, end) + 2).fill(0);
     const beginDate = new Date(begin);
     let result: ProductResponse[] = [];
