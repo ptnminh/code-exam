@@ -14,30 +14,28 @@ const moment = require('moment-timezone');
 export class ProductService {
   constructor(private readonly prismaService: PrismaService) {}
 
-  async createProduct(products) {
-    const data = products.map((product) => {
-      return {
-        title: product.title,
-        createdDate: product.created_at,
-        productType: product.product_type,
-        imageUrl: product.image?.src ?? '',
-      };
+  async createProduct(input): Promise<any> {
+    if (Array.isArray(input)) {
+      const data = input.map((product) => {
+        return {
+          title: product.title,
+          createdDate: product.created_at,
+          productType: product.product_type,
+          imageUrl: product.image?.src ?? '',
+        };
+      });
+      return this.prismaService.products.createMany({
+        data,
+      });
+    }
+    return this.prismaService.products.create({
+      data: {
+        title: input.title,
+        createdDate: input.created_at,
+        productType: input.product_type,
+        imageUrl: input.image?.src ?? '',
+      },
     });
-    return this.prismaService.products.createMany({
-      data,
-    });
-    // create upsert by prisma
-    // return this.prismaService.$transaction(
-    //   data.map((cur) =>
-    //     this.prismaService.products.upsert({
-    //       where: {
-    //         title: cur.title,
-    //       },
-    //       create: cur,
-    //       update: {},
-    //     }),
-    //   ),
-    // );
   }
 
   async getProducts(begin: string, end: string): Promise<any> {

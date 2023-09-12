@@ -51,53 +51,20 @@ export class ProductController {
       const response = request.data;
       const { product } = response;
       if (product) {
-        //const { image: imagesResponse, variants: variantsResponse } = product;
-
-        const createProductRequest = await this.httpService.axiosRef.post(
+        await this.httpService.axiosRef.post(
           '/products.json',
           formatData(product),
         );
-
-        const createProductResponse = createProductRequest.data;
-        const { product: productReponse } = createProductResponse;
-
-        // connect variant to image
-        // Lỗi
-        // if (productReponse) {
-        //   if (!!imagesResponse.variant_ids.length) {
-        //     imagesResponse.variant_ids.map((_, index) => {
-        //       let variantId: number = productReponse.variants[index].id;
-        //       console.log({
-        //         id: variantId,
-        //         image_id: imagesResponse.id,
-        //       });
-        //       return this.httpService.axiosRef.put(
-        //         `/variants/${variantId}.json`,
-        //         {
-        //           variant: {
-        //             id: variantId,
-        //             image_id: imagesResponse.id,
-        //           },
-        //         },
-        //       );
-        //     });
-        //   }
-        // }
-
-        // create product for return to user
-
         const productToResponseToUser = await this.productService.createProduct(
-          [
-            {
-              title: product.title,
-              product_type: product.product_type,
-              created_at: product.created_at,
-              image: product.iamge,
-            },
-          ],
+          {
+            title: product.title,
+            product_type: product.product_type,
+            created_at: product.created_at,
+            image: product.iamge,
+          },
         );
         return {
-          product_id: productToResponseToUser[0].id,
+          product_id: productToResponseToUser.id,
         };
       }
     } catch (error) {
