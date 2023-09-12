@@ -16,3 +16,7 @@ $ npm run start
 $ npm run start:dev
 
 ```
+
+## Overview 
+
+Em tự đánh giá thì em thấy phần 2 crawl product em chưa connect được variant và images ạ
